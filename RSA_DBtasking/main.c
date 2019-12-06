@@ -28,10 +28,8 @@ int main()
 	printf("input operator : ");
 	fgets(buf, 102, stdin);
 	buf[strlen(buf) - 1] = null;
-
-	char* result = null;
 	
-	LInt resulting = { null, 0, NULL };
+	LInt result = { null, 0, NULL };
 	if (!strncmp(buf, "+", 1))
 	{
 		LInt bInt1 = SLInt(num1);
@@ -41,17 +39,17 @@ int main()
 		LIntPrint(bInt2);
 		printf("==================\n");
 		clock_t start = clock();
-		//gitPlus(&resulting, bInt1, bInt2);
-		gitPlus(&bInt1, bInt1, bInt2);
+		//gitPlus(&result, bInt1, bInt2);
+		Plus(&bInt1, bInt1, bInt2);
 		printf("Plus Func Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
 		printf("===============\n");
-		//LIntPrint(resulting);
+		//LIntPrint(result);
 		LIntPrint(bInt1);
 		LIntPrint(bInt2);
 		printf("===============\n");
 		free(bInt1.num);
 		free(bInt2.num);
-		//free(resulting.num);
+		//free(result.num);
 		return 0;
 	}
 	else if (!strncmp(buf, "-", 1))
@@ -59,17 +57,17 @@ int main()
 		LInt bInt1 = SLInt(num1);
 		LInt bInt2 = SLInt(num2);
 		clock_t start = clock();
-		//gitMinus(&resulting, bInt1, bInt2);
-		gitMinus(&bInt1, bInt1, bInt2);
+		//gitMinus(&result, bInt1, bInt2);
+		Minus(&bInt1, bInt1, bInt2);
 		printf("Minus Func Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
 		printf("===============\n");
-		//LIntPrint(resulting);
+		//LIntPrint(result);
 		LIntPrint(bInt1);
 		LIntPrint(bInt2);
 		printf("===============\n");
 		free(bInt1.num);
 		free(bInt2.num);
-		//free(resulting.num);
+		//free(result.num);
 		return 0;
 	}
 	else if (!strncmp(buf, "*", 1))
@@ -77,17 +75,17 @@ int main()
 		LInt bInt1 = SLInt(num1);
 		LInt bInt2 = SLInt(num2);
 		clock_t start = clock();
-		//gitMultiple(&resulting, bInt1, bInt2);
-		gitMultiple(&bInt1, bInt1, bInt2);
+		//gitMultiple(&result, bInt1, bInt2);
+		Multiple(&bInt1, bInt1, bInt2);
 		printf("Multiple End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
 		printf("===============\n");
-		//LIntPrint(resulting);
+		//LIntPrint(result);
 		LIntPrint(bInt1);
 		LIntPrint(bInt2);
 		printf("===============\n");
 		free(bInt1.num);
 		free(bInt2.num);
-		//free(resulting.num);
+		//free(result.num);
 		return 0;
 	}
 	else if (!strncmp(buf, "/", 1))
@@ -95,17 +93,17 @@ int main()
 		LInt bInt1 = SLInt(num1);
 		LInt bInt2 = SLInt(num2);
 		clock_t start = clock();
-		//gitDivide(&resulting, bInt1, bInt2, false);
-		gitDivide(&bInt1, bInt1, bInt2, false);
+		//gitDivide(&result, bInt1, bInt2, false);
+		Divide(&bInt1, bInt1, bInt2, false);
 		printf("Divide End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
 		printf("===============\n");
-		//LIntPrint(resulting);
+		//LIntPrint(result);
 		LIntPrint(bInt1);
 		LIntPrint(bInt2);
 		printf("===============\n");
 		free(bInt1.num);
 		free(bInt2.num);
-		//free(resulting.num);
+		//free(result.num);
 		return 0;
 		//Operate(&result, num1, num2, "/");
 	}
@@ -114,24 +112,24 @@ int main()
 		LInt bInt1 = SLInt(num1);
 		LInt bInt2 = SLInt(num2);
 		clock_t start = clock();
-		//gitDivide(&resulting, bInt1, bInt2, true);
-		gitDivide(&bInt1, bInt1, bInt2, true);
+		//gitDivide(&result, bInt1, bInt2, true);
+		Divide(&bInt1, bInt1, bInt2, true);
 		printf("Mod End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
 		printf("===============\n");
-		//LIntPrint(resulting);
+		//LIntPrint(result);
 		LIntPrint(bInt1);
 		LIntPrint(bInt2);
 		printf("===============\n");
 		free(bInt1.num);
 		free(bInt2.num);
-		//free(resulting.num);
+		//free(result.num);
 		return 0;
 	}
 	else if (!strncmp(buf, "b", 1))
 	{
 		LInt bInt1 = SLInt(num1);
 		clock_t start = clock();
-		gitChangeBinary(&bInt1, bInt1);
+		ChangeBinary(&bInt1, bInt1);
 		printf("Binary End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
 		printf("===============\n");
 		LIntPrint(bInt1);
@@ -144,89 +142,76 @@ int main()
 		LInt bInt1 = SLInt(num1);
 		LInt bInt2 = SLInt(num2);
 		clock_t start = clock();
-		gitModularSquare(&resulting, bInt1, bInt2);
+		ModularSquare(&result, bInt1, bInt2);
 		printf("ModularSquare End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
 		printf("===============\n");
-		LIntPrint(resulting);
+		LIntPrint(result);
 		printf("===============\n");
 		free(bInt1.num);
 		free(bInt2.num);
-		free(resulting.num);
+		free(result.num);
 		return 0;
 	}
-	else if (!strncmp(buf, "v", 1))
-	{
-		ModularSquare(&result, num1, num2);
-		printf("strlen(result) : %ld\n", strlen(result));
-	}
-	else if (!strncmp(buf, "p", 1))
-	{
-		char* gen = NULL;
-		GeneratorPrime(&gen);
+	//else if (!strncmp(buf, "p", 1))
+	//{
+	//	char* gen = NULL;
+	//	GeneratorPrime(&gen);
 
-		//printf("gen : %s\n", gen);
-		ReversePrint("rev gen", gen);
-		printf("strlen(gen) : %ld\n", strlen(gen));
+	//	//printf("gen : %s\n", gen);
+	//	ReversePrint("rev gen", gen);
+	//	printf("strlen(gen) : %ld\n", strlen(gen));
 
-		NextGenerator(&gen);
+	//	NextGenerator(&gen);
 
-		//printf("next gen : %s\n", gen);
-		ReversePrint("rev next gen", gen);
-		printf("strlen(next gen) : %ld\n", strlen(gen));
+	//	//printf("next gen : %s\n", gen);
+	//	ReversePrint("rev next gen", gen);
+	//	printf("strlen(next gen) : %ld\n", strlen(gen));
 
-	}
-	else if (!strncmp(buf, "r", 1))
-	{
-		char *N = NULL, *eulerN = NULL/*, *d = NULL, *e = "65537"*/;
-		sem_init(&semaphore, 0, 1);
-		clock_t start = clock();
-		pthread_t threads[TLEN];
-		int targs[TLEN];
-		for (int i = 0; i < TLEN; i++)
-			targs[i] = i;
-		for (int i = 0; i < TLEN; i++)
-		{
-			pthread_create(&threads[i], NULL, ThreadGenerator, (void*)&targs[i]);
-		}
-		for (int i = 0; i < TLEN; i++)
-		{
-			pthread_join(threads[i], NULL);
-		}
-		sem_destroy(&semaphore);
-		printf("Thread End Time : %.5lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
+	//}
+	//else if (!strncmp(buf, "r", 1))
+	//{
+	//	char *N = NULL, *eulerN = NULL/*, *d = NULL, *e = "65537"*/;
+	//	sem_init(&semaphore, 0, 1);
+	//	clock_t start = clock();
+	//	pthread_t threads[TLEN];
+	//	int targs[TLEN];
+	//	for (int i = 0; i < TLEN; i++)
+	//		targs[i] = i;
+	//	for (int i = 0; i < TLEN; i++)
+	//	{
+	//		pthread_create(&threads[i], NULL, ThreadGenerator, (void*)&targs[i]);
+	//	}
+	//	for (int i = 0; i < TLEN; i++)
+	//	{
+	//		pthread_join(threads[i], NULL);
+	//	}
+	//	sem_destroy(&semaphore);
+	//	printf("Thread End Time : %.5lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
 
-		ReversePrint("rev prime1", primes[0]);
-		ReversePrint("rev prime1", primes[1]);
-		printf("strlen(primes) : %ld\n", strlen(primes[0]));
+	//	ReversePrint("rev prime1", primes[0]);
+	//	ReversePrint("rev prime1", primes[1]);
+	//	printf("strlen(primes) : %ld\n", strlen(primes[0]));
 
-		//N
-		Multiple(&N, primes[0], primes[1]);
+	//	//N
+	//	Multiple(&N, primes[0], primes[1]);
 
-		//eulerN
-		Minus(&primes[0], primes[0], "1");
-		Minus(&primes[1], primes[1], "1");
-		Multiple(&eulerN, primes[0], primes[1]);
+	//	//eulerN
+	//	Minus(&primes[0], primes[0], "1");
+	//	Minus(&primes[1], primes[1], "1");
+	//	Multiple(&eulerN, primes[0], primes[1]);
 
 
 
 
-		for (int i = 0; i < TLEN; i++)
-		{
-			free(primes[i]);
-			primes[i] = NULL;
-		}
-		return 0;
-	}
+	//	for (int i = 0; i < TLEN; i++)
+	//	{
+	//		free(primes[i]);
+	//		primes[i] = NULL;
+	//	}
+	//	return 0;
+	//}
 	else
 		return 0;
-
-
-	memset(buf, null, sizeof(buf));
-
-	ReversePrint("main result", result);
-	free(result);
-	return 0;
-
 }
 /*
 valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind-out.txt ./
