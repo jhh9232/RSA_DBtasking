@@ -1,7 +1,7 @@
 {
   "host_identifier": "-142567219",
   "predefines": {
-    "cpp_compiler": "g++",
+    "cpp_compiler": "gcc",
     "c_compiler": "gcc",
     "cpp_compiler_defines": {
       "__SSP_STRONG__": "3",

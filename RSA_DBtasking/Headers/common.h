@@ -5,10 +5,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
+#include <sys/time.h>
 
 #define true 1
 #define false 0
+#define TRUE 1
+#define FALSE 0
+#define SUCCESS 1
+#define ERROR 0
 #define null '\0'
+#define LARGELEN 500
 
 #define plus (char)43       //'+'
 #define minus (char) 45     //'-'
@@ -28,10 +35,33 @@
 #define eight (char)56
 #define nine (char)57
 
+typedef struct LargeInt LInt;
+
+struct LargeInt
+{
+	char sign;
+	size_t len;
+	char *num;
+};
+
+int Wait(int);
 int IsNumber(char*);
 void Eliminate(char*);
 void Reverse(char*);
 void ReverseMalloc(char**);
 void ReversePrint(const char *, char*);
+void ReverseMinusPrint(const char*, char*);
+
+
+
+LInt SLConst(char*);
+LInt SLInt(char*);
+void SPLInt(LInt**, char*);
+char* GLInt(LInt);
+size_t GLLen(LInt);
+char GLSign(LInt);
+void LIntPrint(LInt);
+void DLInt(LInt*);
+void DPInt(LInt**);
 
 #endif // !COMMON_H

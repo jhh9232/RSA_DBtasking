@@ -77,6 +77,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <RemoteCCompileToolExe>gcc</RemoteCCompileToolExe>
+    <RemoteLdToolExe>gcc</RemoteLdToolExe>
   </PropertyGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
@@ -86,13 +87,19 @@
     <ClCompile Include="Sources\CharCalculator.c" />
     <ClCompile Include="Sources\common.c" />
     <ClCompile Include="Sources\CreatePrime.c" />
+    <ClCompile Include="Sources\PrimeThread.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Headers\CharCalculator.h" />
     <ClInclude Include="Headers\common.h" />
     <ClInclude Include="Headers\CreatePrime.h" />
+    <ClInclude Include="Headers\PrimeThread.h" />
   </ItemGroup>
-  <ItemDefinitionGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <LibraryDependencies>pthread</LibraryDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>
