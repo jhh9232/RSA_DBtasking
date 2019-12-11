@@ -87,6 +87,7 @@
     <ClInclude Include="Headers\CreatePrime.h" />
     <ClInclude Include="Headers\HeapCalculator.h" />
     <ClInclude Include="Headers\PrimeThread.h" />
+    <ClInclude Include="Headers\RSAlib.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c" />
@@ -94,6 +95,7 @@
     <ClCompile Include="Sources\CreatePrime.c" />
     <ClCompile Include="Sources\HeapCalculator.c" />
     <ClCompile Include="Sources\PrimeThread.c" />
+    <ClCompile Include="Sources\RSAlib.c" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>

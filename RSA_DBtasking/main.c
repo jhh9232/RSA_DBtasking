@@ -1,5 +1,6 @@
 //#include "./Headers/PrimeThread.h"
 #include "./Headers/PrimeThread.h"
+#include "./Headers/RSAlib.h"
 
 int main()
 {
@@ -257,36 +258,9 @@ int main()
 		}
 		printf("===============\n");
 
-		LInt N = { null, 0, NULL };      //공개키
-		LInt e = SetLArray("3");     //공개키
-		LInt d = { null, 0, NULL };      //trapdoor
-		LInt OulerN = { null, 0, NULL };
-		LInt k = { null, 0, NULL };
-		LInt lone = SetLArray("1");
-
-		//공개키 N
-		LMultiple(&N, gen[0], gen[1]);
-
-		//오일러 N
-		LMinus(&(gen[0]), gen[0], lone);
-		LMinus(&(gen[1]), gen[1], lone);
-		LMultiple(&OulerN, gen[0], gen[1]);
-
-		//k
-		LInt ktmp = { null, 0, NULL };
-		LDivide(&ktmp, OulerN, e, true);
-		LMinus(&k, e, ktmp);
-		free(ktmp.num);
-
-		//trapdoor d
-		LMultiple(&k, k, OulerN);
-		LPlus(&k, k, lone);
-		LDivide(&d, k, e, false);
-
-
-		free(OulerN.num);
-		free(k.num);
-		free(lone.num);
+		LInt N = GetPublicN(gen[0], gen[1]);        //공개키
+		LInt e = SetLArray("3");                    //공개키
+		LInt d = GetTrapdoorD(gen[0], gen[1], e);   //trapdoor
 
 		printf("=======N=======\n");
 		LIntPrint(N);
