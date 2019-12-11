@@ -327,7 +327,7 @@ int main()
 				printf("%d ", (int)buf[i]);
 			printf("\n");
 
-			fprintf(writing, "cnt = %d, str = %s\n integers : ", cnt, buf);
+			fprintf(writing, "cnt = %d\ntext = %s\n integers : ", cnt, buf);
 			for (int i = 0; i < (int)strlen(buf); i++)
 				fprintf(writing, "%d ", (int)buf[i]);
 			fprintf(writing, "\n");
