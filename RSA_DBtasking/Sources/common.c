@@ -120,23 +120,46 @@ void ReverseMinusPrint(const char* explain, char* n)
 }
 
 
-LInt SLConst(char* str)
+void SetLInit(LInt* bInt)
+{
+	bInt->sign = null;
+	bInt->len = 0;
+	if (bInt->num)
+		free(bInt->num);
+	bInt->num = NULL;
+}
+
+LInt SetLArray(char* str)
 {
 	LInt bInt;
+	size_t sLen = 0;
+	char* number = NULL;
 	if (!str || !strncmp(str, "", strlen(str)))
 		str = "0";
 	if (str[0] >= zero && str[0] <= nine)
+	{
 		bInt.sign = plus;
+		sLen = strlen(str);
+		number = (char*)malloc(sLen + 1);
+		strncpy(number, str, sLen);
+		number[sLen] = null;
+	}
 	else
+	{
 		bInt.sign = minus;
-	Eliminate(str);
-	Reverse(str);
-	bInt.len = strlen(str);
-	bInt.num = str;
+		sLen = strlen(str + 1);
+		number = (char*)malloc(sLen + 1);
+		strncpy(number, str + 1, sLen);
+		number[sLen] = null;
+	}
+
+	ReverseMalloc(&number);
+	bInt.len = sLen;
+	bInt.num = number;
 	return bInt;
 }
 
-LInt SLInt(char* str)
+LInt SetLInt(char* str)
 {
 	if (!str || !strncmp(str, "", strlen(str)))
 		str = "0";
@@ -156,45 +179,11 @@ LInt SLInt(char* str)
 	LInt bInt = { .sign = sign, .len = sLen, .num = number };
 	return bInt;
 }
-void SPLInt(LInt** bInt, char* str)
-{
-	if (!str || !strncmp(str, "", strlen(str)))
-		str = "0";
-	size_t sLen = 0;
-	char* number = NULL;
-	char sign = null;
-	if (str[0] >= zero && str[0] <= nine)
-		sign = plus;
-	else
-		sign = minus;
-	Eliminate(str);
-	Reverse(str);
-	sLen = strlen(str);
-	number = (char*)malloc(sLen + 1);
-	strncpy(number, str, strlen(str));
-	number[sLen] = null;
 
-	*bInt = (LInt*)malloc(sizeof(LInt));
-	(*bInt)->sign = sign;
-	(*bInt)->len = sLen;
-	(*bInt)->num = number;
-}
-char* GLInt(LInt bInt)
-{
-	return bInt.num;
-}
-size_t GLLen(LInt bInt)
-{
-	return bInt.len;
-}
-char GLSign(LInt bInt)
-{
-	return bInt.sign;
-}
 void LIntPrint(LInt bInt)
 {
 	printf(".sign = %c\n", bInt.sign);
-	printf(".len  = %d\n", bInt.len);
+	printf(".len  = %ld\n", bInt.len);
 	printf(".num  = %s", bInt.num);
 	if (bInt.sign == minus)
 	{
@@ -207,18 +196,37 @@ void LIntPrint(LInt bInt)
 		ReversePrint(".rev ", bInt.num);
 	}
 }
-void DLInt(LInt* bInt)
+
+void LIntSetMalloc(char** result, size_t size)
 {
-	if (bInt && bInt->num)
-		free(bInt->num);
+	if (*result)
+		free(*result);
+
+	*result = (char*)malloc(size + 1);
 }
-void DPInt(LInt** bInt)
+
+void LIntSetCalloc(char** result, size_t size)
 {
-	if (*bInt)
-	{
-		if ((*bInt)->num)
-			free((*bInt)->num);
-		free(*bInt);
-		*bInt = NULL;
-	}
+	if (*result)
+		free(*result);
+
+	*result = (char*)calloc(size + 1, sizeof(char));
+}
+
+void LIntCopy(LInt* dest, LInt* source)
+{
+	dest->sign = source->sign;
+	dest->len = source->len;
+	LIntSetMalloc(&(dest->num), source->len);
+	strncpy(dest->num, source->num, source->len);
+	dest->num[source->len] = null;
+}
+
+void LIntCopySize(LInt* dest, LInt* source, size_t size)
+{
+	dest->sign = source->sign;
+	dest->len = source->len;
+	LIntSetMalloc(&(dest->num), size);
+	strncpy(dest->num, source->num, source->len);
+	dest->num[source->len] = null;
 }

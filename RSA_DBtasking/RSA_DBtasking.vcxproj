@@ -83,22 +83,27 @@
     <None Include=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c" />
-    <ClCompile Include="Sources\CharCalculator.c" />
-    <ClCompile Include="Sources\common.c" />
-    <ClCompile Include="Sources\CreatePrime.c" />
-    <ClCompile Include="Sources\PrimeThread.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Headers\CharCalculator.h" />
     <ClInclude Include="Headers\common.h" />
     <ClInclude Include="Headers\CreatePrime.h" />
+    <ClInclude Include="Headers\HeapCalculator.h" />
     <ClInclude Include="Headers\PrimeThread.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.c" />
+    <ClCompile Include="Sources\common.c" />
+    <ClCompile Include="Sources\CreatePrime.c" />
+    <ClCompile Include="Sources\HeapCalculator.c" />
+    <ClCompile Include="Sources\PrimeThread.c" />
   </ItemGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
       <LibraryDependencies>pthread</LibraryDependencies>
     </Link>
+    <ClCompile>
+      <CLanguageStandard>c11</CLanguageStandard>
+      <PreprocessorDefinitions>
+      </PreprocessorDefinitions>
+    </ClCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

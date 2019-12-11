@@ -1,6 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,7 +16,9 @@
 #define SUCCESS 1
 #define ERROR 0
 #define null '\0'
-#define LARGELEN 500
+//RSA 4096
+#define LARGELEN 4100
+#define PRIMELEN 258
 
 #define plus (char)43       //'+'
 #define minus (char) 45     //'-'
@@ -35,9 +38,9 @@
 #define eight (char)56
 #define nine (char)57
 
-typedef struct LargeInt LInt;
+typedef struct LargeHeapInt LInt;
 
-struct LargeInt
+struct LargeHeapInt
 {
 	char sign;
 	size_t len;
@@ -53,15 +56,14 @@ void ReversePrint(const char *, char*);
 void ReverseMinusPrint(const char*, char*);
 
 
-
-LInt SLConst(char*);
-LInt SLInt(char*);
-void SPLInt(LInt**, char*);
-char* GLInt(LInt);
-size_t GLLen(LInt);
-char GLSign(LInt);
+void SetLInit(LInt*);
+LInt SetLArray(char*);
+LInt SetLInt(char*);
 void LIntPrint(LInt);
-void DLInt(LInt*);
-void DPInt(LInt**);
+
+void LIntSetMalloc(char**, size_t);
+void LIntSetCalloc(char**, size_t);
+void LIntCopy(LInt*, LInt*);
+void LIntCopySize(LInt*, LInt*, size_t);
 
 #endif // !COMMON_H

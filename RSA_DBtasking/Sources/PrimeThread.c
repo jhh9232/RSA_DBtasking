@@ -1,53 +1,96 @@
 #include "../Headers/PrimeThread.h"
 
-sem_t semaphore;
-char* primes[TLEN] = { NULL, };
+pthread_rwlock_t rwLock;
+LInt primes[TLEN];
+int tresult[TLEN];
+
+void WriteTres(int);
+int ReadTres();
+
+void WriteTres(int n)
+{
+	pthread_rwlock_wrlock(&rwLock);
+
+	tresult[n] = true;
+
+	pthread_rwlock_unlock(&rwLock);
+}
+int ReadTres()
+{
+	pthread_rwlock_rdlock(&rwLock);
+	for (int i = 0; i < TLEN; i++)
+	{
+		if (tresult[i])
+		{
+			pthread_rwlock_unlock(&rwLock);
+			return true;
+		}
+	}
+	pthread_rwlock_unlock(&rwLock);
+	return false;
+}
+
+void InitTglobal()
+{
+	for (int i = 0; i < TLEN; i++)
+	{
+		primes[i].sign = null;
+		primes[i].len = 0;
+		primes[i].num = NULL;
+
+		tresult[i] = false;
+	}
+}
+
+void LIntThreadCopy(LInt* bInt, int len)
+{
+	primes[len].sign = bInt->sign;
+	primes[len].len = bInt->len;
+	if (primes[len].num)
+		free(primes[len].num);
+	primes[len].num = bInt->num;
+}
 
 void* ThreadGenerator(void* arg)
 {
-	clock_t start = clock();
 	int n = *(int*)arg;
-	unsigned int* ranState = (unsigned int*)arg;
-	char* gen = NULL;
-	long long int rancnt = 0;
-	*ranState = (unsigned int)time(NULL) ^ (unsigned int)getpid() ^ (unsigned int)pthread_self();
-	ThreadGeneratorPrime(&gen, ranState);
+	int cnt = 0;
+	//long long int rancnt = 0;
+	LInt result = { null, 0, NULL };
+	LInt con = SetLArray("2");
+	LParsePrime(&result, primes[n], con);
+	if (result.len == 1 && !(strncmp(result.num, "1", result.len)))
+	{
+		printf("success...\n");
+		WriteTres(n);
+		free(con.num);
+		free(result.num);
+		return NULL;
+	}
+	
 	while (true)
 	{
-		ReversePrint("rev gen", gen);
-		/*char scan[10] = { null, };
-		fgets(scan, sizeof(scan), stdin);*/
-		ModularSquare(&primes[n], gen, "2");
-		printf("strlen(result) : %ld\n", strlen(primes[n]));
-		if (!strncmp(primes[n], "1", strlen(primes[n])))
+		clock_t tstart = clock();
+		SetLInit(&result);
+		AddGenerator(&(primes[n]), TADD);
+		LParsePrime(&result, primes[n], con);
+		if (result.len == 1 && !(strncmp(result.num, "1", result.len)))
 		{
-			//printf("gen(rev) : %s\n", gen);
-			ReversePrint("gen", gen);
-			free(primes[n]);
-			primes[n] = (char*)malloc(strlen(gen) + 1);
-			strncpy(primes[n], gen, strlen(gen));
-			primes[strlen(gen)] = null;
-			printf("시도 횟수 : %ld\n", rancnt);
-			printf("Thread[%d] 걸린 시간 : %.5lf\n", n, (double)(clock() - start) / CLOCKS_PER_SEC);
-			free(gen);
-			gen = NULL;
-			break;
+			printf("success...\n");
+			WriteTres(n);
+			free(con.num);
+			free(result.num);
+			return NULL;
 		}
-		else
+		if (ReadTres())
 		{
-			printf("재시도...\n");
-			free(primes[n]);
-			primes[n] = NULL;
-			rancnt++;
-			NextGenerator(&gen);
+			printf("another thread success...\n");
+			free(con.num);
+			free(result.num);
+			return NULL;
 		}
+		cnt++;
+		printf("%d retry in %d Thread... time : %.20lf \n", cnt, n, (double)(clock() - tstart) / CLOCKS_PER_SEC);
 	}
-	return NULL;
-
-
-	//printf("Thread[%d]\n", n);
-	//primes[n] = (char*)malloc(2);
-	//primes[n][0] = (char)(n + zero);
-	//primes[n][1] = null;
-	//return NULL;
+	
 }
