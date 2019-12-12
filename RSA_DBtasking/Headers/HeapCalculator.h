@@ -12,4 +12,6 @@ int LChangeBinary(LInt*, LInt);
 int LParsePrime(LInt*, LInt, LInt);
 int LModularSquare(LInt*, LInt, LInt, LInt);
 
+void OperTmp(char*, char*, char*);
+
 #endif

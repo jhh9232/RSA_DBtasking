@@ -7,6 +7,7 @@ C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\Sources|/home/jhhwan
 C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\Sources\CreatePrime.c|/home/jhhwang/dbsources/RSA_DBtasking/Sources/CreatePrime.c
 C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\Sources\HeapCalculator.c|/home/jhhwang/dbsources/RSA_DBtasking/Sources/HeapCalculator.c
 C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\Sources\PrimeThread.c|/home/jhhwang/dbsources/RSA_DBtasking/Sources/PrimeThread.c
+C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\Sources\ReadConfig.c|/home/jhhwang/dbsources/RSA_DBtasking/Sources/ReadConfig.c
 C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\Sources\RSAlib.c|/home/jhhwang/dbsources/RSA_DBtasking/Sources/RSAlib.c
 C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\Headers\common.h|/home/jhhwang/dbsources/RSA_DBtasking/Headers/common.h
 C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\Headers|/home/jhhwang/dbsources/RSA_DBtasking/Headers
@@ -14,5 +15,6 @@ C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\Headers|/home/jhhwan
 C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\Headers\CreatePrime.h|/home/jhhwang/dbsources/RSA_DBtasking/Headers/CreatePrime.h
 C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\Headers\HeapCalculator.h|/home/jhhwang/dbsources/RSA_DBtasking/Headers/HeapCalculator.h
 C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\Headers\PrimeThread.h|/home/jhhwang/dbsources/RSA_DBtasking/Headers/PrimeThread.h
+C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\Headers\ReadConfig.h|/home/jhhwang/dbsources/RSA_DBtasking/Headers/ReadConfig.h
 C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\Headers\RSAlib.h|/home/jhhwang/dbsources/RSA_DBtasking/Headers/RSAlib.h
 C:\Users\ghkd0\Documents\GitHub\RSA_DBtasking\RSA_DBtasking\.editorconfig|/home/jhhwang/dbsources/RSA_DBtasking/.editorconfig

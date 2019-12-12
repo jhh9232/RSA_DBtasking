@@ -1,6 +1,7 @@
 //#include "./Headers/PrimeThread.h"
 #include "./Headers/PrimeThread.h"
 #include "./Headers/RSAlib.h"
+#include "./Headers/ReadConfig.h"
 
 int main()
 {
@@ -30,128 +31,14 @@ int main()
 	printf("input operator : ");
 	fgets(buf, 102, stdin);
 	buf[strlen(buf) - 1] = null;
-	LInt result = { null, 0, NULL };
-	if (!strncmp(buf, "+", 1))
+	
+	if (!strncmp(buf, "o", 1))
 	{
-		LInt bInt1 = SetLInt(num1);
-		LInt bInt2 = SetLInt(num2);
-		printf("==================\n");
-		LIntPrint(bInt1);
-		LIntPrint(bInt2);
-		printf("==================\n");
-		clock_t start = clock();
-		//gitPlus(&result, bInt1, bInt2);
-		LPlus(&bInt1, bInt1, bInt2);
-		printf("LPlus Func Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
-		printf("===============\n");
-		//LIntPrint(result);
-		LIntPrint(bInt1);
-		LIntPrint(bInt2);
-		printf("===============\n");
-		free(bInt1.num);
-		free(bInt2.num);
-		//free(result.num);
-		return 0;
-	}
-	else if (!strncmp(buf, "-", 1))
-	{
-		LInt bInt1 = SetLInt(num1);
-		LInt bInt2 = SetLInt(num2);
-		clock_t start = clock();
-		//gitMinus(&result, bInt1, bInt2);
-		LMinus(&bInt1, bInt1, bInt2);
-		printf("LMinus Func Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
-		printf("===============\n");
-		//LIntPrint(result);
-		LIntPrint(bInt1);
-		LIntPrint(bInt2);
-		printf("===============\n");
-		free(bInt1.num);
-		free(bInt2.num);
-		//free(result.num);
-		return 0;
-	}
-	else if (!strncmp(buf, "*", 1))
-	{
-		LInt bInt1 = SetLInt(num1);
-		LInt bInt2 = SetLInt(num2);
-		clock_t start = clock();
-		//gitMultiple(&result, bInt1, bInt2);
-		LMultiple(&bInt1, bInt1, bInt2);
-		printf("LMultiple End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
-		printf("===============\n");
-		//LIntPrint(result);
-		LIntPrint(bInt1);
-		LIntPrint(bInt2);
-		printf("===============\n");
-		free(bInt1.num);
-		free(bInt2.num);
-		//free(result.num);
-		return 0;
-	}
-	else if (!strncmp(buf, "/", 1))
-	{
-		LInt bInt1 = SetLInt(num1);
-		LInt bInt2 = SetLInt(num2);
-		clock_t start = clock();
-		//gitDivide(&result, bInt1, bInt2, false);
-		LDivide(&bInt1, bInt1, bInt2, false);
-		printf("LDivide End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
-		printf("===============\n");
-		//LIntPrint(result);
-		LIntPrint(bInt1);
-		LIntPrint(bInt2);
-		printf("===============\n");
-		free(bInt1.num);
-		free(bInt2.num);
-		//free(result.num);
-		return 0;
-		//Operate(&result, num1, num2, "/");
-	}
-	else if (!strncmp(buf, ".", 1))
-	{
-		LInt bInt1 = SetLInt(num1);
-		LInt bInt2 = SetLInt(num2);
-		clock_t start = clock();
-		//gitDivide(&result, bInt1, bInt2, true);
-		LDivide(&bInt1, bInt1, bInt2, true);
-		printf("LMod End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
-		printf("===============\n");
-		//LIntPrint(result);
-		LIntPrint(bInt1);
-		LIntPrint(bInt2);
-		printf("===============\n");
-		free(bInt1.num);
-		free(bInt2.num);
-		//free(result.num);
-		return 0;
-	}
-	else if (!strncmp(buf, "b", 1))
-	{
-		LInt bInt1 = SetLInt(num1);
-		clock_t start = clock();
-		LChangeBinary(&bInt1, bInt1);
-		printf("LBinary End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
-		printf("===============\n");
-		LIntPrint(bInt1);
-		printf("===============\n");
-		free(bInt1.num);
-		return 0;
-	}
-	else if (!strncmp(buf, "m", 1))
-	{
-		LInt bInt1 = SetLInt(num1);
-		LInt bInt2 = SetLInt(num2);
-		clock_t start = clock();
-		LParsePrime(&result, bInt1, bInt2);
-		printf("LModularSquare End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
-		printf("===============\n");
-		LIntPrint(result);
-		printf("===============\n");
-		free(bInt1.num);
-		free(bInt2.num);
-		free(result.num);
-		return 0;
+		memset(buf, null, strlen(buf) + 1);
+		printf("input operator2 : ");
+		fgets(buf, 102, stdin);
+		buf[strlen(buf) - 1] = null;
+		OperTmp(buf, num1, num2);
 	}
 	else if (!strncmp(buf, "r", 1))
 	{
@@ -257,60 +144,77 @@ int main()
 			LIntPrint(gen[i]);
 		}
 		printf("===============\n");
-
-		LInt N = GetPublicN(gen[0], gen[1]);        //공개키
-		LInt e = SetLArray("3");                    //공개키
-		LInt d = GetTrapdoorD(gen[0], gen[1], e);   //trapdoor
-
-		printf("=======N=======\n");
-		LIntPrint(N);
-		printf("=======d=======\n");
-		LIntPrint(d);
-		printf("===============\n");
-
-		free(N.num);
-		free(e.num);
-		free(d.num);
+		WriteKey(gen[0], gen[1]);
 
 		for (int i = 0; i < 2; i++)
-		{
 			free(gen[i].num);
-		}
 		printf("Thread Operate End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
 
 		return 0;
 	}
-	else if (!strncmp(buf, "f", 1))
+	else if (!strncmp(buf, "e", 1))
 	{
-		FILE* reading = fopen("original_text.txt", "r, ccs=UTF-8");
-		FILE* writing = fopen("encrypted_text.txt", "w+, ccs=UTF-8");
-		
-		if (reading == NULL)
+		LInt publicN = CfgGetData("KEYS", "PUBN");
+		if (!(publicN.num)) return 0;
+		LInt publicE = CfgGetData("KEYS", "PUBE");
+		if (!(publicE.num))
+		{
+			free(publicN.num);
 			return 0;
+		}
+		LInt trapdoor = CfgGetData("KEYS", "TRAPD");
+		if (!(trapdoor.num))
+		{
+			free(publicN.num);
+			free(publicE.num);
+			return 0;
+		}
+		FILE* reading = fopen("original_text.txt", "r, ccs=UTF-8");
+		if (!reading) return 0;
+		FILE* writing = fopen("encrypted_text.txt", "w+, ccs=UTF-8");
 
+		printf("===============\n");
+		LIntPrint(publicN);
+		printf("===============\n");
+		LIntPrint(publicE);
+		printf("===============\n");
+		LIntPrint(trapdoor);
+		printf("===============\n");
 
-		int cnt = 0;
+		char buffer[LARGELEN];
+		//read and encrypted file
 		while (!feof(reading))
 		{
-			fgets(buf, 1024, reading);
-			buf[strlen(buf) - 1] = null;
-			if (strlen(buf) == 0)
+			fgets(buffer, 4096, reading);
+			buffer[strlen(buffer) - 1] = null;
+			if (strlen(buffer) == 0)
 				break;
-			printf("text : %s\n", buf);
-			for (int i = 0; i < (int)strlen(buf); i++)
-				printf("%d ", (int)buf[i]);
+			printf("text : %s\n", buffer);
+			/*
+			for (int i = 0; i < (int)strlen(buffer); i++)
+				printf("%d ", (int)buffer[i]);
 			printf("\n");
 
-			fprintf(writing, "cnt = %d\ntext = %s\n integers : ", cnt, buf);
-			for (int i = 0; i < (int)strlen(buf); i++)
-				fprintf(writing, "%d ", (int)buf[i]);
+			fprintf(writing, "text = %s\nintegers : ", buffer);
+			for (int i = 0; i < (int)strlen(buffer); i++)
+				fprintf(writing, "%d ", (int)buffer[i]);
 			fprintf(writing, "\n");
-
-			memset(buf, null, strlen(buf));
+			*/
+			memset(buffer, null, strlen(buffer));
 		}
+
+		//Free
 		fclose(reading);
 		fclose(writing);
+		free(publicN.num);
+		free(publicE.num);
+		free(trapdoor.num);
+		
 		return 0;
+	}
+	else if (!strncmp(buf, "g", 1))
+	{
+		
 	}
 	else
 	{

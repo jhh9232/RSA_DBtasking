@@ -167,7 +167,7 @@ void GetMulOneDigit(LInt* mulOne, LInt num)
 {
 	LIntSetZero(mulOne);
 	for (int i = 1; i <= 9; i++)
-		LPlus(&mulOne[i], mulOne[i-1], num);
+		LPlus(&mulOne[i], mulOne[i - 1], num);
 }
 // ===============================
 
@@ -285,7 +285,7 @@ int LDivide(LInt* result, LInt num1, LInt num2, int isMod)
 	else if (cmp == 0)
 	{
 		LIntSetZero(result);
-		if(!isMod)
+		if (!isMod)
 			result->num[0] = one;
 		free(n1.num);
 		free(n2.num);
@@ -381,7 +381,7 @@ int LChangeBinary(LInt* bin, LInt num)
 	LInt binT = { null, 0, NULL };
 	LInt mtwo = SetLArray("2");
 	LIntCopy(&binT, &num);
-	while(binT.num[0] != zero || binT.num[1] != null)
+	while (binT.num[0] != zero || binT.num[1] != null)
 	{
 		if ((binT.num[0] - zero) % 2 == 0)
 			res[i] = zero;
@@ -419,7 +419,7 @@ int LParsePrime(LInt* result, LInt P, LInt a)
 	LChangeBinary(&binP, binP);
 	//ReversePrint("rev bin", binP.num);
 	//printf("len(bin) : %ld\n", strlen(binP.num));
-	
+
 	LDivide(&sqrmod, sqrmod, P, true);
 	if (binP.num[0] == one)
 	{
@@ -451,7 +451,7 @@ int LParsePrime(LInt* result, LInt P, LInt a)
 	return SUCCESS;
 }
 
-int LModularSquare(LInt* result, LInt P, LInt a, LInt modn)
+int LModularSquare(LInt* result, LInt a, LInt P, LInt modn)
 {
 	LInt binP = { null, 0, NULL };
 	LInt sqrmod = { null, 0, NULL };
@@ -481,6 +481,22 @@ int LModularSquare(LInt* result, LInt P, LInt a, LInt modn)
 			LDivide(result, *result, modn, true);
 		}
 	}
+	if (a.sign == plus || P.num[0] == zero || P.num[0] == two 
+		|| P.num[0] == four || P.num[0] == six || P.num[0] == eight)
+	{
+		if (modn.sign == plus)
+			result->sign = plus;
+		else if (modn.sign == minus)
+			result->sign = minus;
+	}
+	else if(a.sign == minus)
+	{
+		if (modn.sign == plus)
+			result->sign = minus;
+		else if (modn.sign == minus)
+			result->sign = plus;
+	}
+
 	free(modn.num);
 	free(binP.num);
 	free(sqrmod.num);
@@ -565,6 +581,159 @@ void LIntEraseHeadZero(LInt* bInt)
 			bInt->len--;
 		}
 		else break;
+	}
+}
+
+void OperTmp(char* buf, char* num1, char* num2)
+{
+	LInt result = { null, 0, NULL };
+	if (!strncmp(buf, "+", 1))
+	{
+		LInt bInt1 = SetLInt(num1);
+		LInt bInt2 = SetLInt(num2);
+		printf("==================\n");
+		LIntPrint(bInt1);
+		LIntPrint(bInt2);
+		printf("==================\n");
+		clock_t start = clock();
+		//gitPlus(&result, bInt1, bInt2);
+		LPlus(&bInt1, bInt1, bInt2);
+		printf("LPlus Func Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
+		printf("===============\n");
+		//LIntPrint(result);
+		LIntPrint(bInt1);
+		LIntPrint(bInt2);
+		printf("===============\n");
+		free(bInt1.num);
+		free(bInt2.num);
+		//free(result.num);
+		return;
+	}
+	else if (!strncmp(buf, "-", 1))
+	{
+		LInt bInt1 = SetLInt(num1);
+		LInt bInt2 = SetLInt(num2);
+		clock_t start = clock();
+		//gitMinus(&result, bInt1, bInt2);
+		LMinus(&bInt1, bInt1, bInt2);
+		printf("LMinus Func Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
+		printf("===============\n");
+		//LIntPrint(result);
+		LIntPrint(bInt1);
+		LIntPrint(bInt2);
+		printf("===============\n");
+		free(bInt1.num);
+		free(bInt2.num);
+		//free(result.num);
+		return;
+	}
+	else if (!strncmp(buf, "*", 1))
+	{
+		LInt bInt1 = SetLInt(num1);
+		LInt bInt2 = SetLInt(num2);
+		clock_t start = clock();
+		//gitMultiple(&result, bInt1, bInt2);
+		LMultiple(&bInt1, bInt1, bInt2);
+		printf("LMultiple End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
+		printf("===============\n");
+		//LIntPrint(result);
+		LIntPrint(bInt1);
+		LIntPrint(bInt2);
+		printf("===============\n");
+		free(bInt1.num);
+		free(bInt2.num);
+		//free(result.num);
+		return;
+	}
+	else if (!strncmp(buf, "/", 1))
+	{
+		LInt bInt1 = SetLInt(num1);
+		LInt bInt2 = SetLInt(num2);
+		clock_t start = clock();
+		//gitDivide(&result, bInt1, bInt2, false);
+		LDivide(&bInt1, bInt1, bInt2, false);
+		printf("LDivide End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
+		printf("===============\n");
+		//LIntPrint(result);
+		LIntPrint(bInt1);
+		LIntPrint(bInt2);
+		printf("===============\n");
+		free(bInt1.num);
+		free(bInt2.num);
+		//free(result.num);
+		return;
+		//Operate(&result, num1, num2, "/");
+	}
+	else if (!strncmp(buf, ".", 1))
+	{
+		LInt bInt1 = SetLInt(num1);
+		LInt bInt2 = SetLInt(num2);
+		clock_t start = clock();
+		//gitDivide(&result, bInt1, bInt2, true);
+		LDivide(&bInt1, bInt1, bInt2, true);
+		printf("LMod End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
+		printf("===============\n");
+		//LIntPrint(result);
+		LIntPrint(bInt1);
+		LIntPrint(bInt2);
+		printf("===============\n");
+		free(bInt1.num);
+		free(bInt2.num);
+		//free(result.num);
+		return;
+	}
+	else if (!strncmp(buf, "b", 1))
+	{
+		LInt bInt1 = SetLInt(num1);
+		clock_t start = clock();
+		LChangeBinary(&bInt1, bInt1);
+		printf("LBinary End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
+		printf("===============\n");
+		LIntPrint(bInt1);
+		printf("===============\n");
+		free(bInt1.num);
+		return;
+	}
+	else if (!strncmp(buf, "m", 1))
+	{
+		LInt bInt1 = SetLInt(num1);
+		LInt bInt2 = SetLInt(num2);
+		clock_t start = clock();
+		LParsePrime(&result, bInt1, bInt2);
+		printf("LParsePrime End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
+		printf("===============\n");
+		LIntPrint(result);
+		printf("===============\n");
+		free(bInt1.num);
+		free(bInt2.num);
+		free(result.num);
+		return;
+	}
+	else if (!strncmp(buf, "n", 1))
+	{
+		char num3[103] = { null };
+		memset(buf, null, strlen(buf) + 1);
+		printf("input number3 : ");
+		fgets(buf, 102, stdin);
+
+		buf[strlen(buf) - 1] = null;
+		strncpy(num3, buf, 256);
+		memset(buf, null, strlen(buf) + 1);
+
+		LInt bInt1 = SetLInt(num1);
+		LInt bInt2 = SetLInt(num2);
+		LInt bInt3 = SetLInt(num3);
+		clock_t start = clock();
+		LModularSquare(&result, bInt1, bInt2, bInt3);
+		printf("LModularSquare End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
+
+		printf("===============\n");
+		LIntPrint(result);
+		printf("===============\n");
+		free(bInt1.num);
+		free(bInt2.num);
+		free(bInt3.num);
+		free(result.num);
 	}
 }
 

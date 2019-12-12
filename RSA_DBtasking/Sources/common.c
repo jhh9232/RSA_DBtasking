@@ -230,3 +230,4 @@ void LIntCopySize(LInt* dest, LInt* source, size_t size)
 	strncpy(dest->num, source->num, source->len);
 	dest->num[source->len] = null;
 }
+

@@ -3,6 +3,30 @@
 LInt GetOulerN(LInt, LInt, LInt);
 LInt GetSubordinationK(LInt, LInt);
 
+void WriteKey(LInt prime1, LInt prime2)
+{
+
+	LInt N = GetPublicN(prime1, prime2);
+	LInt e = SetLArray("3");
+	LInt d = GetTrapdoorD(prime1, prime2, e);
+	ReverseMalloc(&(prime1.num));
+	ReverseMalloc(&(prime2.num));
+	ReverseMalloc(&(N.num));
+	ReverseMalloc(&(e.num));
+	ReverseMalloc(&(d.num));
+	
+	FILE* writing = fopen("RSA_KEY.conf", "w+, ccs=UTF-8");
+	fprintf(writing, "[PRIME]\n");
+	fprintf(writing, "prime1=%s\nprime2=%s\n", prime1.num, prime2.num);
+	fprintf(writing, "[KEYS]\n");
+	fprintf(writing, "PUBN=%s\nPUBE=%s\nTRAPD=%s\n", N.num, e.num, d.num);
+
+	free(N.num);
+	free(e.num);
+	free(d.num);
+	fclose(writing);
+}
+
 LInt GetPublicN(LInt prime1, LInt prime2)
 {
 	LInt N = { null, 0, NULL };
@@ -23,6 +47,19 @@ LInt GetTrapdoorD(LInt prime1, LInt prime2, LInt e)
 	free(OulerN.num);
 	free(lone.num);
 	return trapdoor;
+}
+
+void EncryptText(LInt N, LInt e, FILE* writing, char* origin)
+{
+	//LInt encrypted[4098] = { 0, };
+
+
+
+	strncpy(origin, "byebye sir!", 19);
+	origin[strlen(origin)] = null;
+	for (int i = 0; i < (int)strlen(origin); i++)
+		printf("%d ", origin[i]);
+	printf("\n");
 }
 
 
