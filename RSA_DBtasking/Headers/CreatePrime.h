@@ -3,7 +3,7 @@
 
 #include "./HeapCalculator.h"
 
-void GeneratorPrime(LInt*, int, char);
+void GeneratorPrime(LInt*, int, char, int);
 void ThreadGeneratorPrime(LInt*, int, char, unsigned int*);
 int NextGenerator(LInt*);
 int check3mul(LInt);

@@ -1,67 +1,261 @@
 #include "../Headers/RSAlib.h"
 
+LInt publicN = { null, 0, NULL };
+LInt publicE = { null, 0, NULL };
+LInt trapdoor = { null, 0, NULL };
+
+void Init(LInt* bign)
+{
+	bign->sign = null;
+	bign->len = 0;
+	if (bign->num)
+		free(bign->num);
+	bign->num = NULL;
+}
+
+void SetPubN(LInt bign, int isheap)
+{
+	if (publicN.num)
+		free(publicN.num);
+
+	publicN.sign = bign.sign;
+	publicN.len = bign.len;
+	if (isheap)
+	{
+		publicN.num = (char*)malloc(bign.len + 1);
+		strncpy(publicN.num, bign.num, bign.len);
+		publicN.num[bign.len] = null;
+	}
+	else
+	{
+		publicN.num = bign.num;
+	}
+}
+void SetPubE(LInt bign, int isheap)
+{
+	if (publicE.num)
+		free(publicE.num);
+
+	publicE.sign = bign.sign;
+	publicE.len = bign.len;
+	if (isheap)
+	{
+		publicE.num = (char*)malloc(bign.len + 1);
+		strncpy(publicE.num, bign.num, bign.len);
+		publicE.num[bign.len] = null;
+	}
+	else
+	{
+		publicE.num = bign.num;
+	}
+}
+void SetPrvD(LInt bign, int isheap)
+{
+	if (trapdoor.num)
+		free(trapdoor.num);
+	
+	trapdoor.sign = bign.sign;
+	trapdoor.len = bign.len;
+	if (isheap)
+	{
+		trapdoor.num = (char*)malloc(bign.len + 1);
+		strncpy(trapdoor.num, bign.num, bign.len);
+		trapdoor.num[bign.len] = null;
+	}
+	else
+	{
+		trapdoor.num = bign.num;
+	}
+}
+
+LInt GetPubN()
+{
+	return publicN;
+}
+LInt GetPubE()
+{
+	return publicE;
+}
+LInt GetPrvD()
+{
+	return trapdoor;
+}
+
+void DestroyAll()
+{
+	Init(&publicN);
+	Init(&publicE);
+	Init(&trapdoor);
+}
+
 LInt GetOulerN(LInt, LInt, LInt);
-LInt GetSubordinationK(LInt, LInt);
+LInt GetSubordinationK(LInt);
 
 void WriteKey(LInt prime1, LInt prime2)
 {
 
-	LInt N = GetPublicN(prime1, prime2);
-	LInt e = SetLArray("3");
-	LInt d = GetTrapdoorD(prime1, prime2, e);
+	GetPublicN(prime1, prime2);
+	publicE = SetLArray("65537");
+	GetTrapdoorD(prime1, prime2);
+
 	ReverseMalloc(&(prime1.num));
 	ReverseMalloc(&(prime2.num));
-	ReverseMalloc(&(N.num));
-	ReverseMalloc(&(e.num));
-	ReverseMalloc(&(d.num));
+	ReverseMalloc(&(publicN.num));
+	ReverseMalloc(&(publicE.num));
+	ReverseMalloc(&(trapdoor.num));
 	
 	FILE* writing = fopen("RSA_KEY.conf", "w+, ccs=UTF-8");
 	fprintf(writing, "[PRIME]\n");
 	fprintf(writing, "prime1=%s\nprime2=%s\n", prime1.num, prime2.num);
 	fprintf(writing, "[KEYS]\n");
-	fprintf(writing, "PUBN=%s\nPUBE=%s\nTRAPD=%s\n", N.num, e.num, d.num);
+	fprintf(writing, "PUBN=%s\nPUBE=%s\nTRAPD=%s\n", publicN.num, publicE.num, trapdoor.num);
 
-	free(N.num);
-	free(e.num);
-	free(d.num);
+	DestroyAll();
 	fclose(writing);
 }
 
-LInt GetPublicN(LInt prime1, LInt prime2)
+void GetPublicN(LInt prime1, LInt prime2)
 {
-	LInt N = { null, 0, NULL };
-	LMultiple(&N, prime1, prime2);
-	return N;
+	Init(&publicN);
+	LMultiple(&publicN, prime1, prime2);
 }
 
-LInt GetTrapdoorD(LInt prime1, LInt prime2, LInt e)
+void GetTrapdoorD(LInt prime1, LInt prime2)
 {
+	if (!(publicE.num))
+		return;
+
+	printf("trapdoorstart!\n");
+	Init(&trapdoor);
 	LInt lone = SetLArray("1");
 	LInt OulerN = GetOulerN(prime1, prime2, lone);
-	LInt trapdoor = GetSubordinationK(OulerN, e);
+	LInt k = SetLArray("1");
 
-	LMultiple(&trapdoor, trapdoor, OulerN);
+	LInt difference = { null, 0, NULL };
+	LInt tempdif = { null, 0, NULL };
+	LInt temp = { null, 0, NULL };
+	//1
+	LMultiple(&temp, k, OulerN);
+	LPlus(&temp, temp, lone);
+	LDivide(&difference, temp, publicE, true);
+	if (LIntIsZero(&difference))
+	{
+		printf("k = 1\n");
+		LDivide(&trapdoor, temp, publicE, false);
+		free(temp.num);
+		free(difference.num);
+		free(OulerN.num);
+		free(lone.num);
+		return;
+	}
+	//2
+	LPlus(&k, k, lone);
+	LMultiple(&temp, k, OulerN);
+	LPlus(&temp, temp, lone);
+	LDivide(&tempdif, temp, publicE, true);
+	if (LIntIsZero(&tempdif))
+	{
+		printf("k = 2\n");
+		LDivide(&trapdoor, temp, publicE, false);
+		free(temp.num);
+		free(difference.num);
+		free(tempdif.num);
+		free(OulerN.num);
+		free(lone.num);
+	}
+	if (LIntCompare(&difference, &tempdif, true) == 1)
+	{
+		LPlus(&temp, tempdif, publicE);
+		LMinus(&difference, temp, difference);
+	}
+	else
+	{
+		LMinus(&difference, tempdif, difference);
+	}
+	free(temp.num);
+	while (true)
+	{
+		LPlus(&k, k, lone);
+		LPlus(&tempdif, tempdif, difference);
+		int cmp = LIntCompare(&tempdif, &publicE, true);
+		if (cmp == 1)
+			LMinus(&tempdif, tempdif, publicE);
+		else if (cmp == 0) break;
+		else if (LIntIsZero(&tempdif)) break;
+	}
+	free(difference.num);
+	free(tempdif.num);
+
+	LIntPrint(k);
+	LMultiple(&trapdoor, k, OulerN);
 	LPlus(&trapdoor, trapdoor, lone);
-	LDivide(&trapdoor, trapdoor, e, false);
-
+	LDivide(&trapdoor, trapdoor, publicE, false);
+	
+	free(k.num);
 	free(OulerN.num);
 	free(lone.num);
-	return trapdoor;
+	printf("trapdoor end\n");
 }
 
-void EncryptText(LInt N, LInt e, FILE* writing, char* origin)
+void EncryptText(FILE* writing, char* buf)
 {
-	//LInt encrypted[4098] = { 0, };
+	//LInt origin = { null, 0, NULL };
+	//LInt encrypted = { null, 0, NULL };
+	char buffer[10] = { null };
 
+	if (!(publicN.len && publicE.len && trapdoor.len))
+		return;
 
+	for (int i = 0; i < (int)strlen(buf); i++)
+	{
+		sprintf(buffer, "%d", (int)buf[i]);
+		printf("integer : \"%s\"\n", buffer);
 
-	strncpy(origin, "byebye sir!", 19);
-	origin[strlen(origin)] = null;
-	for (int i = 0; i < (int)strlen(origin); i++)
-		printf("%d ", origin[i]);
-	printf("\n");
+		//m^e mod N = c
+		LInt encrypt = SetLArray(buffer);
+		//bInt1^bInt2 mod bInt3
+		//LModularSquare(&bInt1, bInt1, bInt2, bInt3);
+		LModularSquare(&encrypt, encrypt, publicE, publicN);
+		ReverseMalloc(&(encrypt.num));
+		if (encrypt.sign == plus)
+		{
+			printf("%s\n", encrypt.num);
+			fprintf(writing, "%s ", encrypt.num);
+		}
+		else if (encrypt.sign == minus)
+		{
+			printf("-%s\n", encrypt.num);
+			fprintf(writing, "-%s ", encrypt.num);
+		}
+
+		free(encrypt.num);
+		memset(buffer, null, strlen(buffer));
+	}
+	fprintf(writing, "\n");
 }
 
+void DecryptText(char* buf, char* origin, int seq)
+{
+	if (!(publicN.len && publicE.len && trapdoor.len))
+		return;
+
+	//c^d mod N = m
+	LInt decrypt = SetLArray(buf);
+	LModularSquare(&decrypt, decrypt, trapdoor, publicN);
+	printf("result : %s\n", decrypt.num);
+	if (decrypt.sign == minus)
+	{
+		decrypt.num = (char*)realloc(decrypt.num, decrypt.len + 2);
+		decrypt.num[decrypt.len] = minus;
+		decrypt.len++;
+		decrypt.num[decrypt.len] = null;
+	}
+	ReverseMalloc(&(decrypt.num));
+	int temp = atoi(decrypt.num);
+	printf("orig : %d\n", temp);
+	origin[seq] = (char)temp;
+	free(decrypt.num);
+}
 
 LInt GetOulerN(LInt prime1, LInt prime2, LInt lone)
 {
@@ -78,12 +272,15 @@ LInt GetOulerN(LInt prime1, LInt prime2, LInt lone)
 	return OulerN;
 }
 
-LInt GetSubordinationK(LInt OulerN, LInt e)
+LInt GetSubordinationK(LInt OulerN)
 {
 	LInt k = { null, 0, NULL };
 	
-	LDivide(&k, OulerN, e, true);
-	LMinus(&k, e, k);
+	LDivide(&k, OulerN, publicE, true);
+	LMinus(&k, publicE, k);
+	if (k.num[0] == one && k.num[1] == null)
+		LPlus(&k, k, publicE);
+	
 
 	return k;
 }

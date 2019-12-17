@@ -496,8 +496,6 @@ int LModularSquare(LInt* result, LInt a, LInt P, LInt modn)
 		else if (modn.sign == minus)
 			result->sign = plus;
 	}
-
-	free(modn.num);
 	free(binP.num);
 	free(sqrmod.num);
 	//printf("====================\n");
@@ -694,7 +692,7 @@ void OperTmp(char* buf, char* num1, char* num2)
 		free(bInt1.num);
 		return;
 	}
-	else if (!strncmp(buf, "m", 1))
+	else if (!strncmp(buf, "p", 1))
 	{
 		LInt bInt1 = SetLInt(num1);
 		LInt bInt2 = SetLInt(num2);
@@ -709,9 +707,9 @@ void OperTmp(char* buf, char* num1, char* num2)
 		free(result.num);
 		return;
 	}
-	else if (!strncmp(buf, "n", 1))
+	else if (!strncmp(buf, "m", 1))
 	{
-		char num3[103] = { null };
+		char num3[PRIMELEN] = { null };
 		memset(buf, null, strlen(buf) + 1);
 		printf("input number3 : ");
 		fgets(buf, 102, stdin);
@@ -724,16 +722,18 @@ void OperTmp(char* buf, char* num1, char* num2)
 		LInt bInt2 = SetLInt(num2);
 		LInt bInt3 = SetLInt(num3);
 		clock_t start = clock();
-		LModularSquare(&result, bInt1, bInt2, bInt3);
+		//bInt1^bInt2 mod bInt3
+		LModularSquare(&bInt1, bInt1, bInt2, bInt3);
 		printf("LModularSquare End Time : %.20lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
 
 		printf("===============\n");
-		LIntPrint(result);
+		LIntPrint(bInt1);
 		printf("===============\n");
 		free(bInt1.num);
 		free(bInt2.num);
 		free(bInt3.num);
-		free(result.num);
+		//free(result.num);
+		return;
 	}
 }
 

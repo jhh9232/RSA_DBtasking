@@ -14,4 +14,7 @@ int LModularSquare(LInt*, LInt, LInt, LInt);
 
 void OperTmp(char*, char*, char*);
 
+int LIntCompare(LInt*, LInt*, int);
+int LIntIsZero(LInt*);
+
 #endif

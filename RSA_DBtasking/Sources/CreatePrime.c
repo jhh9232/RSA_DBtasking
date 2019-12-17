@@ -1,49 +1,54 @@
 #include "../Headers/CreatePrime.h"
 
-void GeneratorPrime(LInt* make, int size, char sign)
+void GeneratorPrime(LInt* make, int size, char sign, int arrlen)
 {
 	clock_t start = clock();
-	int i, sum = 0;
-	char gen[LARGELEN] = { null, };
-	if (make->num != NULL)
-		free(make->num);
-
 	srand((unsigned int)time(NULL));
-	while (true)
+
+	for (int l = 0; l < arrlen; l++)
 	{
-		int ran = rand() % 10;
-		if (ran == 5)
-			ran += 2;
-		else if (ran % 2 == 0)
-			ran++;
-		gen[0] = (char)(ran + zero);
-		sum += ran;
-		for (i = 1; i < size - 1; i++)
+		int i, sum = 0;
+		char gen[LARGELEN] = { null, };
+		if ((make+l)->num != NULL)
+			free((make+l)->num);
+
+		while (true)
 		{
-			ran = rand() % 10;
-			gen[i] = (char)(ran + zero);
+			int ran = rand() % 10;
+			if (ran == 5)
+				ran += 2;
+			else if (ran % 2 == 0)
+				ran++;
+			gen[0] = (char)(ran + zero);
 			sum += ran;
+			for (i = 1; i < size - 1; i++)
+			{
+				ran = rand() % 10;
+				gen[i] = (char)(ran + zero);
+				sum += ran;
+			}
+			ran = rand() % 9 + 1;
+			gen[size - 1] = (char)(ran + zero);
+			sum += ran;
+			//printf("sum : %d\n", sum);
+			//printf("len : %d\n", strlen(gen));
+			if (sum % 3 != 0)
+			{
+				break;
+			}
+			//printf("retry...\n");
 		}
-		ran = rand() % 9 + 1;
-		gen[size - 1] = (char)(ran + zero);
-		sum += ran;
-		//printf("sum : %d\n", sum);
-		//printf("len : %d\n", strlen(gen));
-		if (sum % 3 != 0)
-		{
-			break;
-		}
-		//printf("retry...\n");
+		//Reverse(gen);
+		size_t genlen = strlen(gen);
+		(make + l)->num = (char*)malloc(genlen + 1);
+		strncpy((make + l)->num, gen, genlen);
+		((make + l)->num)[genlen] = null;
+		(make + l)->len = genlen;
+		(make + l)->sign = sign;
+		//printf("random gen : %s\n", *make[l]);
+		printf("Gen Time : %.5lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
 	}
-	//Reverse(gen);
-	size_t genlen = strlen(gen);
-	make->num = (char*)malloc(genlen + 1);
-	strncpy(make->num, gen, genlen);
-	(make->num)[genlen] = null;
-	make->len = genlen;
-	make->sign = sign;
-	//printf("random gen : %s\n", *make);
-	printf("Gen Time : %.5lf\n", (double)(clock() - start) / CLOCKS_PER_SEC);
+	
 }
 
 void ThreadGeneratorPrime(LInt* make, int size, char sign, unsigned int* ranSeed)
